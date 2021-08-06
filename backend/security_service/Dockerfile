@@ -1,15 +1,12 @@
-FROM node:latest
+FROM node:alpine
 
 WORKDIR /usr/src/app
 
 COPY package.json .
 
-RUN npm install
+RUN yarn install
 
-COPY . .
-
-# RUN tsc -p tsconfig.json
-# RUN /usr/src/server/node_modules/typescript/bin/tsc -p /usr/src/app/src/tsconfig.json
+COPY ./dist .
 
 EXPOSE 8080
 

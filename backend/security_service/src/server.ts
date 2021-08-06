@@ -1,8 +1,3 @@
-// import express from "express";
-// const server = express();
+import app from './app'
 
-// server.listen(8080);
-
-const a = 5
-
-console.log(a)
+app.listen(3330)
