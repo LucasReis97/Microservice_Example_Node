@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
 import AuthenticationRoute from './0-routes/AuthenticationRoute'
 
@@ -9,9 +10,16 @@ class App {
 
   public constructor () {
     this.express = express()
+    this.configuration()
     this.middlewares()
     this.database()
     this.routes()
+  }
+
+  private configuration ():void {
+    if (process.env.NODE_ENV !== 'production') {
+      dotenv.config()
+    }
   }
 
   private middlewares (): void {
@@ -20,7 +28,7 @@ class App {
   }
 
   private database (): void {
-    mongoose.connect('mongodb://127.0.0.1:27017/ProjectNode', {
+    mongoose.connect(String(process.env.CONNECTION_STRING), {
       useUnifiedTopology: true,
       useNewUrlParser: true
     })

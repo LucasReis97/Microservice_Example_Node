@@ -29,8 +29,8 @@ UserSchema.methods.compareHash = async function (hash: string): Promise<boolean>
 }
 
 UserSchema.methods.generateToken = async function (): Promise<string> {
-  return jwt.sign({ id: this.id }, 'secret', {
-    expiresIn: 86400
+  return jwt.sign({ id: this.id }, String(process.env.SECRET_JWT), {
+    expiresIn: 3600
   })
 }
 
