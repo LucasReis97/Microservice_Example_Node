@@ -28,15 +28,28 @@ class App {
   }
 
   private database (): void {
-    mongoose.connect(String(process.env.CONNECTION_STRING), {
-      useUnifiedTopology: true,
-      useNewUrlParser: true
+    const {
+      MONGO_USERNAME,
+      MONGO_PASSWORD,
+      MONGO_HOSTNAME,
+      MONGO_PORT,
+      MONGO_DB
+    } = process.env
+
+    const options = {
+      useNewUrlParser: true,
+      reconnectTries: Number.MAX_VALUE,
+      reconnectInterval: 500,
+      connectTimeoutMS: 10000
+    }
+
+    const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`
+
+    mongoose.connect(url, options).then(function () {
+      console.log('MongoDB is connected')
     })
-      .then(() => {
-        console.log('DB Connected!')
-      })
-      .catch(err => {
-        console.log('DB Connection Error: ' + err.message)
+      .catch(function (err) {
+        console.log(err)
       })
   }
 

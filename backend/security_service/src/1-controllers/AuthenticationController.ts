@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
-import User from '../2-schema/User'
+import User from '../2-schema/implementations/User'
+import { UserDocument } from '../2-schema/interfaces/User'
 
 class AuthenticationController {
   public async SignIn (req: Request, res: Response): Promise<Response> {
@@ -28,7 +29,7 @@ class AuthenticationController {
       }
       const user = new User(req.body)
       return await user.save()
-        .then(response => {
+        .then((response: UserDocument) => {
           return res.status(200).json(response)
         })
     } catch (err) {
