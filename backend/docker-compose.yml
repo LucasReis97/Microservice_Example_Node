@@ -1,18 +1,17 @@
 version: '3'
 
 services:
-  nodejs:
+  authentication_service:
+    container_name: authentication_service
     build:
-      context: .
+      context: ./authentication
       dockerfile: Dockerfile
-    image: nodejs
-    container_name: nodejs
     restart: unless-stopped
     env_file: .env
     environment:
       - MONGO_USERNAME=$MONGO_USERNAME
       - MONGO_PASSWORD=$MONGO_PASSWORD
-      - MONGO_HOSTNAME=db
+      - MONGO_HOSTNAME=$MONGO_HOSTNAME
       - MONGO_PORT=$MONGO_PORT
       - MONGO_DB=$MONGO_DB
     ports:
@@ -26,10 +25,10 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     volumes:
-      - bd_security_service:/data/db
+      - bd_authentication:/data/db
     networks:
       - app-network
 
@@ -38,9 +37,9 @@ networks:
     driver: bridge
 
 volumes:
-  bd_security_service:
+  bd_authentication:
     driver: local
     driver_opts:
       type: none
-      device: /home/lucas/bd/security_service
+      device: /home/lucas/bd/authentication
       o: bind

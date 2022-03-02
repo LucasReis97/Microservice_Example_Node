@@ -7,10 +7,10 @@ class AuthenticationRoute {
 
     constructor () {
       this.route = Router()
-      this.configRoutes()
+      this.configureRoutes()
     }
 
-    private configRoutes (): void {
+    private configureRoutes (): void {
       this.route.post('/signin', AuthenticationController.SignIn)
       this.route.post('/signup', AuthenticationController.SignUp)
     }

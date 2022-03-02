@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-
 import AuthenticationRoute from './0-routes/AuthenticationRoute'
 
 class App {
@@ -37,6 +36,7 @@ class App {
     } = process.env
 
     const options = {
+      useUnifiedTopology: true,
       useNewUrlParser: true,
       reconnectTries: Number.MAX_VALUE,
       reconnectInterval: 500,

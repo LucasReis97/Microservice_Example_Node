@@ -1,9 +1,20 @@
-import { Schema, model } from 'mongoose'
-import { UserDocument } from '../interfaces/User'
+import { Schema, model, Document } from 'mongoose'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
-const UserSchema = new Schema<UserDocument>({
+export interface IUser extends Document{
+  firstName: string,
+  lastName:string,
+  email:string,
+  cpf:string,
+  password:string,
+  fullname():string,
+  generateToken(): Promise<string>,
+  compareHash(hash: string): Promise<boolean>
+}
+
+
+const User = new Schema<IUser>({
   firstName: { require: true, type: String },
   lastName: { require: true, type: String },
   email: { type: String, unique: true, required: true, lowercase: true },
@@ -14,24 +25,24 @@ const UserSchema = new Schema<UserDocument>({
   timestamps: true
 })
 
-UserSchema.pre('save', async function hashPassword (next) {
+User.pre('save', async function hashPassword (next) {
   if (!this.isModified('password')) next()
 
   this.password = await bcrypt.hash(this.password, 8)
 })
 
-UserSchema.methods.fullname = function (): string {
+User.methods.fullname = function (): string {
   return this.firstName.trim() + ' ' + this.lastName.trim()
 }
 
-UserSchema.methods.compareHash = async function (hash: string): Promise<boolean> {
+User.methods.compareHash = async function (hash: string): Promise<boolean> {
   return await bcrypt.compare(hash, this.password)
 }
 
-UserSchema.methods.generateToken = async function (): Promise<string> {
+User.methods.generateToken = async function (): Promise<string> {
   return jwt.sign({ id: this.id }, String(process.env.SECRET_JWT), {
     expiresIn: 3600
   })
 }
 
-export default model<UserDocument>('User', UserSchema)
+export default model<IUser>('User', User)
