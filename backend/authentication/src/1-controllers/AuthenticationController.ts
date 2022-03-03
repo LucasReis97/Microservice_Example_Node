@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
-import User, { IUser } from "../2-schema/User";
+import Employee, { IEmployee } from "../2-schema/Employee";
 
 class AuthenticationController {
   public async SignIn(req: Request, res: Response): Promise<Response> {
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({ email });
-      if (!user) {
+      const employee = await Employee.findOne({ email });
+      if (!employee) {
         return res.status(400).json({ error: "Invalid email or password" });
       }
-      if (!(await user.compareHash(password))) {
+      if (!(await employee.compareHash(password))) {
         return res.status(400).json({ error: "Invalid email or password" });
       }
-      return res.status(200).json({ token: await user.generateToken() });
+      return res.status(200).json({ token: await employee.generateToken() });
     } catch (err) {
       return res
         .status(400)
@@ -23,16 +23,16 @@ class AuthenticationController {
   public async SignUp(req: Request, res: Response): Promise<Response> {
     try {
       const { email, cpf } = req.body;
-      if (await User.findOne({ email })) {
+      if (await Employee.findOne({ email })) {
         return res.status(400).json({ error: "E-mail already registered" });
-      } else if (await User.findOne({ cpf })) {
+      } else if (await Employee.findOne({ cpf })) {
         return res.status(400).json({ error: "Cpf already registered" });
       }
-      const user = new User(req.body);
-      return await user.save().then((response: IUser) => {
+      const employee = new Employee(req.body);
+      return await employee.save().then((response: IEmployee) => {
         return res
           .status(201)
-          .json({ message: "User registered successfully" });
+          .json({ message: "Employee registered successfully" });
       });
     } catch (err) {
       return res

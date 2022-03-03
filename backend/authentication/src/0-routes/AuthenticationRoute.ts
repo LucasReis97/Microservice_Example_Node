@@ -11,8 +11,8 @@ class AuthenticationRoute {
     }
 
     private configureRoutes (): void {
-      this.route.post('/signin', AuthenticationController.SignIn)
-      this.route.post('/signup', AuthenticationController.SignUp)
+      this.route.post('/employee/signin', AuthenticationController.SignIn)
+      this.route.post('/employee/signup', AuthenticationController.SignUp)
     }
 }
 
